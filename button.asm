@@ -5,7 +5,7 @@
 INIT:
 	ldi r16,0x08	; load immediate r16 as 0b00001000
 	out 0x04,r16	; set port b on pin 3 as output
-	ldi r16,0x00	; load immediate r16 as 0b00000000
+	clr r16		; load immediate r16 as 0b00000000
 	out 0x05,r16	; set all pins on port b to 0 (low)
 	ldi r16,0x10	; load immediate r16 as 0b00010000
 	out 0x05,r16	; set port b on pin 4 as input pullup
