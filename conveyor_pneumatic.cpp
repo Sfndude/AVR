@@ -97,7 +97,7 @@ int main(){
   PORTD&= ~(1<<CONVEYOR)|(1<<PNEUMATIC);
 
   while(1){
-    if(job<10){
+    if(job<=10){
       if((PIND & (1<<SENSOR))==0){
         PORTB&= ~(1<<5);
         if(sensor!=1){
@@ -117,7 +117,7 @@ int main(){
     }else{
       end_job();
       if((PIND & (1<<SENSOR))==0)
-        uart_puts("JOB ENDED! RESET TO START.\n");
+        uart_puts("JOB FINISHED! RESET TO RESTART.\n");
     }
 
     if((PIND & (1<<RESET))==0){
