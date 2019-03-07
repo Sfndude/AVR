@@ -16,8 +16,7 @@
 #define CONVEYOR 5
 #define PNEUMATIC 6
 
-volatile uint8_t sensor=0,job=0,counter=1,
-                 exec=1;
+volatile uint8_t sensor=0,job=0,counter=1;
 volatile char num2ch[8];
 
 /**************USART****************/
@@ -58,30 +57,25 @@ void init_timer1(void){
 /******************************/
 
 /**************GENERAL****************/
-void robot_conv_pneu(){
-  uart_puts("CONVEYOR & PNEUMATIC ON\n");
-  PORTD|=(1<<CONVEYOR)|(1<<PNEUMATIC);
-}
-
 void end_job(void){
   PORTD&= ~(1<<CONVEYOR);
   PORTD&= ~(1<<PNEUMATIC);
   PORTB|=(1<<5);
+  TCCR1B=0x00;
 }
 /******************************/
 
 ISR(TIMER1_OVF_vect){
-  if(exec==1){
-    if(counter==10){ // active for 10 seconds
-      PORTD&= ~(1<<CONVEYOR);
-      TCNT1=0;
-      counter=0;
-      uart_puts("CONVEYOR OFF\n");
-    }
-    if(counter==2){ // active for 2 seconds
-      PORTD&= ~(1<<PNEUMATIC);
-      uart_puts("PNEUMATIC OFF\n");
-    }
+  if(counter==10){ // active for 10 seconds
+    PORTD&= ~(1<<CONVEYOR);
+    TCNT1=0;
+    counter=0;
+    uart_puts("CONVEYOR OFF\n");
+    TCCR1B=0x00;
+  }
+  if(counter==2){ // active for 2 seconds
+    PORTD&= ~(1<<PNEUMATIC);
+    uart_puts("PNEUMATIC OFF\n");
   }
 
   counter++;
@@ -99,9 +93,10 @@ int main(){
       if((PIND & (1<<SENSOR))==0){
         PORTB&= ~(1<<5);
         if(sensor!=1){
-          job++;
-          robot_conv_pneu();
+          uart_puts("CONVEYOR & PNEUMATIC ON\n");
+          PORTD|=(1<<CONVEYOR)|(1<<PNEUMATIC);
           init_timer1();
+          job++;
         }
         sensor=1;
         itoa(job,num2ch,10);
