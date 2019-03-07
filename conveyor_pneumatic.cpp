@@ -8,6 +8,9 @@
 #include <stdlib.h> // itoa
 //#define _cast(x) #x
 
+#define CONVEYOR_TIMER 10
+#define PNEUMATIC_TIMER 2
+
 #define UBBR 9600
 #define BAUDRATE ((F_CPU)/(UBBR*16UL)-1)
 
@@ -16,7 +19,7 @@
 #define CONVEYOR 5
 #define PNEUMATIC 6
 
-volatile uint8_t sensor=0,job=0,counter=1;
+volatile uint8_t sensor=0,job=0,counter=0;
 volatile char num2ch[8];
 
 /**************USART****************/
@@ -48,9 +51,10 @@ void uart_puts(char* txt){
 
 /**************TIMER****************/
 void init_timer1(void){
-  TCCR1B|=(1<<CS12);
+  OCR1A=15625; // top value
+  TCCR1B|=(1<<WGM12)|(1<<CS12)|(1<<CS10); // CTC mode, compare max OCR1A
   TCNT1=0;
-  TIMSK1|=(1<<TOIE1);
+  TIMSK1|=(1<<OCIE1A); // enable compare interrupt timer 1
   sei();
   counter=0;
 }
@@ -65,20 +69,24 @@ void end_job(void){
 }
 /******************************/
 
-ISR(TIMER1_OVF_vect){
-  if(counter==10){ // active for 10 seconds
+ISR(TIMER1_COMPA_vect){
+  if(counter==(CONVEYOR_TIMER-1)){ // active for 10 seconds
     PORTD&= ~(1<<CONVEYOR);
     TCNT1=0;
     counter=0;
     uart_puts("CONVEYOR OFF\n");
     TCCR1B=0x00;
   }
-  if(counter==2){ // active for 2 seconds
+  if(counter==(PNEUMATIC_TIMER-1)){ // active for 2 seconds
     PORTD&= ~(1<<PNEUMATIC);
     uart_puts("PNEUMATIC OFF\n");
   }
 
   counter++;
+  /*itoa(counter,num2ch,10);
+  uart_puts("TIMER = ");
+  uart_puts(num2ch);
+  uart_put('\n');*/
 }
 
 int main(){
@@ -93,7 +101,7 @@ int main(){
       if((PIND & (1<<SENSOR))==0){
         PORTB&= ~(1<<5);
         if(sensor!=1){
-          uart_puts("CONVEYOR & PNEUMATIC ON\n");
+          uart_puts("\nCONVEYOR & PNEUMATIC ON\n");
           PORTD|=(1<<CONVEYOR)|(1<<PNEUMATIC);
           init_timer1();
           job++;
