@@ -1,4 +1,4 @@
-#include <Arduino.h>
+// #include <Arduino.h> // UNCOMMENT THIS IF YOU NOT USING ARDUINO IDE
 
 int overflow=0,temp=0;
 
