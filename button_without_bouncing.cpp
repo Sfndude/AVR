@@ -3,7 +3,7 @@
 #define DECREASE 3
 #define RESET 4
 
-int counter=0, temp=0, inc=0,
+int counter=0, inc=0,
     dec=0;
 
 void setup(){
