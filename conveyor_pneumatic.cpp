@@ -52,6 +52,7 @@ void uart_puts(char* txt){
 /**************TIMER****************/
 void init_timer1(void){
   OCR1A=15625; // top value
+  //_SFR_MEM16(0x88)=15625;
   TCCR1B|=(1<<WGM12)|(1<<CS12)|(1<<CS10); // CTC mode, compare max OCR1A
   TCNT1=0;
   TIMSK1|=(1<<OCIE1A); // enable compare interrupt timer 1
@@ -72,14 +73,16 @@ void end_job(void){
 ISR(TIMER1_COMPA_vect){
   if(counter==(CONVEYOR_TIMER-1)){ // active for 10 seconds
     PORTD&= ~(1<<CONVEYOR);
+    uart_puts("CONVEYOR OFF\n");
+    uart_puts("PNEUMATIC ON\n");
+    PORTD|=(1<<PNEUMATIC);
+  }
+  if(counter==((CONVEYOR_TIMER+PNEUMATIC_TIMER)-1)){ // active for 2 seconds
+    PORTD&= ~(1<<PNEUMATIC);
     TCNT1=0;
     counter=0;
-    uart_puts("CONVEYOR OFF\n");
-    TCCR1B=0x00;
-  }
-  if(counter==(PNEUMATIC_TIMER-1)){ // active for 2 seconds
-    PORTD&= ~(1<<PNEUMATIC);
     uart_puts("PNEUMATIC OFF\n");
+    TCCR1B=0x00;
   }
 
   counter++;
@@ -101,8 +104,8 @@ int main(){
       if((PIND & (1<<SENSOR))==0){
         PORTB&= ~(1<<5);
         if(sensor!=1){
-          uart_puts("\nCONVEYOR & PNEUMATIC ON\n");
-          PORTD|=(1<<CONVEYOR)|(1<<PNEUMATIC);
+          uart_puts("\nCONVEYOR ON\n");
+          PORTD|=(1<<CONVEYOR);
           init_timer1();
           job++;
         }
