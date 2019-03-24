@@ -1,3 +1,12 @@
+/*
+  A=PD0, B=PD1, .. , G=PD6, Dot=PD7
+  Segment1=PB0, Segment2=PB1
+  Active High
+  
+  Counter Up = PB2
+  Counter Down = PB3
+*/
+
 #ifndef F_CPU
   #define F_CPU 16000000UL
 #endif
