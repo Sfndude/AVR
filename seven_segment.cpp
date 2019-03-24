@@ -1,19 +1,9 @@
-/*
-  A=PD0, B=PD1, .. , G=PD6, Dot=PD7
-  Segment1=PB0, Segment2=PB1
-  Active High
-  
-  Counter Up = PB2
-  Counter Down = PB3
-*/
-
 #ifndef F_CPU
   #define F_CPU 16000000UL
 #endif
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdlib.h>
 
 uint8_t m_inc=0,m_dec=0;
 uint8_t counter=0;
@@ -34,26 +24,20 @@ void switch_segment(uint8_t index){
   }
 }
 void write_number(uint8_t n){
-  char temp[8];
-  uint8_t dig0,dig1;
-  itoa(n,temp,10);
-  dig0=temp[0];
-  dig1=temp[1];
-
   if(n<10){
     switch_segment(0);
     write_segment(0);
-    _delay_ms(3);
+    _delay_ms(15);
     switch_segment(1);
     write_segment(n);
-    _delay_ms(3);
+    _delay_ms(15);
   }else{
     switch_segment(0);
-    write_segment(dig0);
-    _delay_ms(3);
+    write_segment((n/10));
+    _delay_ms(15);
     switch_segment(1);
-    write_segment(dig1);
-    _delay_ms(3);
+    write_segment(n-(int(n/10)*10));
+    _delay_ms(15);
   }
 }
 
@@ -84,6 +68,6 @@ int main(void){
     }else if((PINB & (1<<3))!=0)
       m_dec=1;
 
-    _delay_ms(150);
+    //_delay_ms(150);
   }
 }
