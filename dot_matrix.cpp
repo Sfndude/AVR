@@ -34,7 +34,6 @@ void loop() {
   y=0;
 
   while(y<14){
-
     if(digitalRead(9)==0){
       if(start==false){ start=true; stop=false;}
       else{ start=false; stop=true;}
@@ -48,10 +47,8 @@ void loop() {
         x++;
       }
 
-      if(y!=13)
-        delay(500);
-      else
-        delay(1000);
+      if(y!=13) delay(500);
+      else delay(1000);
       y++;
     }
 
