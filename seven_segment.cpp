@@ -68,6 +68,6 @@ int main(void){
     }else if((PINB & (1<<3))!=0)
       m_dec=1;
 
-    //_delay_ms(150);
+    _delay_ms(150);
   }
 }
