@@ -51,8 +51,8 @@ int main(void){
     if((PINB & (1<<2))==0){
       if(m_inc!=0){
         if(counter>=99) counter=99;
+        else counter++;
         write_number(counter);
-        counter++;
       }
       m_inc=0;
     }else if((PINB & (1<<2))!=0)
@@ -61,8 +61,8 @@ int main(void){
     if((PINB & (1<<3))==0){
       if(m_dec!=0){
         if(counter<=0) counter=0;
+        else counter--;
         write_number(counter);
-        counter--;
       }
       m_dec=0;
     }else if((PINB & (1<<3))!=0)
