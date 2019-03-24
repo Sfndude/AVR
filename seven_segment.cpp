@@ -27,17 +27,17 @@ void write_number(uint8_t n){
   if(n<10){
     switch_segment(0);
     write_segment(0);
-    _delay_ms(15);
+    _delay_ms(3);
     switch_segment(1);
     write_segment(n);
-    _delay_ms(15);
+    _delay_ms(3);
   }else{
     switch_segment(0);
     write_segment((n/10));
-    _delay_ms(15);
+    _delay_ms(3);
     switch_segment(1);
     write_segment(n-(int(n/10)*10));
-    _delay_ms(15);
+    _delay_ms(3);
   }
 }
 
