@@ -159,7 +159,7 @@ unsigned long ads_read_diff(unsigned char pos, unsigned char neg){
  *DOUT - pin 12 (MISO)
  *CS   - pin 10
  *DRDY - pin 9
- *RESET- pin 8 (or tie HIGH?)
+ *RESET- pin 8
  *DVDD - 3V3
  *DGND - GND
  */
