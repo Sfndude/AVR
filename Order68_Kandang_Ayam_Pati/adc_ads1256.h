@@ -102,7 +102,7 @@ unsigned long ads_read(unsigned char ch){
 	adc_val <<= 8;
 	adc_val |= SPI.transfer(0);
 
-	if (adc_val > 0x7fffff) {
+	if (adc_val > 0x7fffff)
 		adc_val = 16777216ul - adc_val;
 
 	_delayM(10);
