@@ -152,3 +152,14 @@ unsigned long ads_read_diff(unsigned char pos, unsigned char neg){
 
 	return adc_val;
 }
+	
+/*
+ *CLK  - pin 13
+ *DIN  - pin 11 (MOSI)
+ *DOUT - pin 12 (MISO)
+ *CS   - pin 10
+ *DRDY - pin 9
+ *RESET- pin 8 (or tie HIGH?)
+ *DVDD - 3V3
+ *DGND - GND
+ */
